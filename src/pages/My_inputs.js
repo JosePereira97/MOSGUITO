@@ -31,7 +31,7 @@ const Main = () => {
     const formData = new FormData();
     formData.append('User_id', userId)
     const response = axios.post('http://127.0.0.1:5002/Get_my_inputs', formData)
-    const data = response.data
+    const data = response.data //Falta tranformar a data obtida do backend em Dados para inserir na tabel. Nao esquecer de usar o ID para fazer remoçoes na BD
     const columns = [
       {
         name: 'File Name',
