@@ -1,13 +1,4 @@
-import {
-  assemblerOptions,
-  errorModelOptions,
-  markersetOptions,
-  normalizationMethodOptions,
-  keggcharterTaxaLevelOptions,
-  recognizerDatabasesOptions, referenceProteomesTaxaLevelOptions
-} from './options'
-
-export const defaultValues = {
+{
   "version": "1.6.1",
   "output":"output",
   "resourcesDirectory":"resources_directory",
@@ -20,15 +11,15 @@ export const defaultValues = {
       "Condition":"",
       "Name":""
     }],
-  "suffix": "",
+  "suffix":"",
   "minimumReadLength":100,
   "minimumReadAverageQuality":20,
   "doAssembly":true,
   "maxMemory":50,
-  "assembler":assemblerOptions[0],
-  "markerset":markersetOptions[0],
+  "assembler":"metaspades",
+  "markerset":"40",
   "doIterativeBinning":true,
-  "errorModel":errorModelOptions[0],
+  "errorModel":"illumina_5",
   "upimapiDatabase":"uniprot",
   "upimapiMaxTargetSeqs":1,
   "upimapiTaxids": "",
@@ -68,16 +59,25 @@ export const defaultValues = {
     "UniPathway: a resource for the exploration and annotation of metabolic pathways"
   ],
   "downloadCddResources":false,
-  "recognizerDatabases":recognizerDatabasesOptions,
-  "normalizationMethod":normalizationMethodOptions[0],
+  "recognizerDatabases":[
+    "CDD",
+    "Pfam",
+    "NCBIfam",
+    "Protein_Clusters",
+    "Smart",
+    "TIGRFAM",
+    "COG",
+    "KOG"
+  ],
+  "normalizationMethod":"TMM",
   "minimumDifferentialExpression":1,
   "proteomicsWorkflow":"compomics",
   "useCrap":true,
   "proteomicsContaminantesDatabase":"contaminants_database.fasta",
-  "referenceProteomesTaxaLevel":referenceProteomesTaxaLevelOptions[6],
+  "referenceProteomesTaxaLevel":"GENUS",
   "protease":"Trypsin",
   "proteaseFile":"",
-  "keggcharterTaxaLevel":keggcharterTaxaLevelOptions[6],
+  "keggcharterTaxaLevel":"GENUS",
   "keggcharterNumberOfTaxa":10,
   "keggcharterMaps":[
     "00010",
