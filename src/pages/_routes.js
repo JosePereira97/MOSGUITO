@@ -20,9 +20,11 @@ import {KeggmapsResults} from './keggmapsResults'
 import EntryReports from "./entryReport";
 import GeneralReports from "./generalReports";
 import ProteinReports from "./proteinReports";
+import Upload_inputs from "./Upload_inputs";
+import My_inputs from "./My_inputs";
 
 const Routes = ({ configData, onConfigChange, onConfigOverwrite, hasMt, toggleHasMt, hasMp, toggleHasMp,
-                  outputsFiles, setOutputsFiles }) => {
+                  outputsFiles, setOutputsFiles, experimentsFiles, setExperimentsFiles }) => {
   return (
     <BrowserRouter>
       <Switch>
@@ -35,6 +37,7 @@ const Routes = ({ configData, onConfigChange, onConfigOverwrite, hasMt, toggleHa
             toggleHasMt={toggleHasMt}
             hasMp={hasMp}
             toggleHasMp={toggleHasMp}
+            experimentsFiles={experimentsFiles}
           />
         </Route>
 
@@ -42,6 +45,8 @@ const Routes = ({ configData, onConfigChange, onConfigOverwrite, hasMt, toggleHa
           <Experiments
             experiments={configData.experiments}
             setExperiments={(value) => onConfigChange('experiments', value)}
+            experimentsFiles={experimentsFiles}
+            setExperimentsFiles={setExperimentsFiles}
           />
         </Route>
 
@@ -67,6 +72,14 @@ const Routes = ({ configData, onConfigChange, onConfigOverwrite, hasMt, toggleHa
         </Route>
 
         <Route path="/MOSGUITO/about">
+        </Route>
+
+        <Route path="/MOSGUITO/upload_inputs">
+          <Upload_inputs />
+        </Route>
+
+        <Route path="/MOSGUITO/my_inputs">
+          <My_inputs/>
         </Route>
 
         <Route path="/MOSGUITO/members">

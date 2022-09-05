@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import Routes from "./_routes";
 import { defaultValues } from '../utils/defaultValues'
@@ -10,6 +10,7 @@ export const App = () => {
   const toggleHasMt = () => setHasMt(!hasMt)
   const [hasMp, setHasMp] = useState(false)
   const toggleHasMp = () => setHasMp(!hasMp)
+  const [experimentsFiles, setExperimentsFiles] = useState([[]])
 
   const onConfigChange = (field, value) => {
     const newValue = { ...configData, [field]: value }
@@ -19,7 +20,6 @@ export const App = () => {
   const onConfigOverwrite = (newConfigData) => {
     const newValue = newConfigData
     setConfig(newValue)
-    console.log(newValue)
   }
 
   return <Routes
@@ -32,6 +32,8 @@ export const App = () => {
     toggleHasMt={toggleHasMt}
     hasMp={hasMp}
     toggleHasMp={toggleHasMp}
+    experimentsFiles={experimentsFiles}
+    setExperimentsFiles={setExperimentsFiles}
   />;
 };
 

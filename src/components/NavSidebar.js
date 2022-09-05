@@ -68,6 +68,21 @@ export const NavSidebar = () => {
                     itemId: "/MOSGUITO/experiments"
                   }
                 ]
+              },
+              {
+                title:"Inputs",
+                itemId: "/MOSGUITO/inputs",
+                elemBefore: () => <Icon name= 'cloud-snow' />,
+                subNav: [
+                  {
+                    title: "Upload Inputs",
+                    itemId: "/MOSGUITO/upload_inputs"
+                  },
+                  {
+                    title: "My Inputs",
+                    itemId: "/MOSGUITO/my_inputs"
+                  }
+                ]
               }
             ]}
           />

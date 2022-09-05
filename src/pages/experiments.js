@@ -17,7 +17,7 @@ const Header = () => {
   )
 }
 
-const Experiments = ({ experiments, setExperiments }) => {
+const Experiments = ({ experiments, setExperiments, experimentsFiles, setExperimentsFiles }) => {
 
   return (
     <DashboardLayout>
@@ -26,6 +26,8 @@ const Experiments = ({ experiments, setExperiments }) => {
         <ExperimentsTable
           experiments={experiments}
           setExperiments={setExperiments}
+          experimentsFiles={experimentsFiles}
+          setExperimentsFiles={setExperimentsFiles}
         />
         <Text style={{textAlign:'left', color:'white', margin:'2px', fontSize: 15}}>{`
           Files: if two files set as "path/to/mg_R1.fq.gz,path/to/mg_R2.fq.gz". If one file, set as "path/to/mg.fq.gz".

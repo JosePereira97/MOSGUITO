@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import YAML from 'yaml'
 import {
   Card,
@@ -31,7 +32,7 @@ import './../App.css'
 import {DashboardLayout} from "../components/Layout";
 import Accordion from "../components/Accordion";
 
-const Main = ({ configData, onConfigChange, onConfigOverwrite, hasMt, toggleHasMt, hasMp, toggleHasMp}) => {
+const Main = ({ configData, onConfigChange, onConfigOverwrite, hasMt, toggleHasMt, hasMp, toggleHasMp, experimentsFiles}) => {
 
   const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
 
@@ -41,6 +42,21 @@ const Main = ({ configData, onConfigChange, onConfigOverwrite, hasMt, toggleHasM
     const snake_case_values = {}
     Object.keys(configData).map((key) => snake_case_values[camelToSnakeCase(key)] = configData[key])
     download(JSON.stringify(snake_case_values, null, 2), 'config.json', 'json')
+  }
+
+  const sendFiles = () => {
+    const formData = new FormData();
+
+    experimentsFiles.forEach(rowFiles => {
+      for (var i = 0; i < rowFiles.length; i++) { 
+        formData.append(rowFiles[i].name, rowFiles[i])
+      }
+    })
+    let snake_case_values = {}
+    Object.keys(configData).map((key) => snake_case_values[camelToSnakeCase(key)] = configData[key])
+    snake_case_values = JSON.stringify(snake_case_values)
+    formData.append('config', snake_case_values);
+  axios.post('http://localhost:5000/Submit_file', formData)
   }
 
   const downloadYaml = (ev) => {
@@ -105,6 +121,14 @@ const Main = ({ configData, onConfigChange, onConfigOverwrite, hasMt, toggleHasM
               color='secondary'
             >
               Download JSON
+            </Button>
+
+            <Button
+              onClick={() => sendFiles()}
+              variant='contained'
+              color='secondary'
+            >
+              Start Analyses
             </Button>
 
             <Button
@@ -449,7 +473,7 @@ const Header = () => {
   )
 }
 
-function Config({ configData, onConfigChange, onConfigOverwrite, hasMt, toggleHasMt, hasMp, toggleHasMp }) {
+function Config({ configData, onConfigChange, onConfigOverwrite, hasMt, toggleHasMt, hasMp, toggleHasMp, experimentsFiles }) {
   return (
     <DashboardLayout>
       <div className='App'>
@@ -462,6 +486,7 @@ function Config({ configData, onConfigChange, onConfigOverwrite, hasMt, toggleHa
           toggleHasMt={toggleHasMt}
           hasMp={hasMp}
           toggleHasMp={toggleHasMp}
+          experimentsFiles={experimentsFiles}
         />
       </div>
     </DashboardLayout>

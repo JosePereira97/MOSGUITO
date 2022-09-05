@@ -26,10 +26,11 @@ const styles = theme => ({
   },
 });
 
-const ExperimentsTable = ({ experiments, setExperiments }) => {
+const ExperimentsTable = ({ experiments, setExperiments, setExperimentsFiles, experimentsFiles }) => {
 
   const increaseRows = () => {
     const newExperiments = [...experiments]
+    const newExperimentsFiles = [...experimentsFiles]
 
     newExperiments.push(
       {
@@ -40,18 +41,23 @@ const ExperimentsTable = ({ experiments, setExperiments }) => {
         "Name":""
       }
     )
-
+    newExperimentsFiles.push([])
+    
     setExperiments(newExperiments)
+    setExperimentsFiles(newExperimentsFiles)
   }
 
   const decreaseRows = () => {
     const newExperiments = [...experiments]
+    const newExperimentsFiles = [...experimentsFiles]
 
     newExperiments.pop()
+    newExperimentsFiles.pop()
 
     if (experiments.length > 1) {
       setExperiments(newExperiments)
     }
+    setExperimentsFiles(newExperimentsFiles)
   }
 
   const editExperiments = (value, n, field) => {
@@ -60,6 +66,26 @@ const ExperimentsTable = ({ experiments, setExperiments }) => {
     newExperiments[n][field] = value
 
     setExperiments(newExperiments)
+  }
+
+  const editExperimentsFiles = (element, files, n, field) => {
+    if(files.length < 1 || files.length > 2) {
+      alert('Deve introduzir um ou dois ficheiros.')
+      element.value = "";
+      return;
+    }
+
+    const newExperiments = [...experiments]
+
+    newExperiments[n][field] = `${files[0].name}${files.length === 2 ? `,${files[1].name}` : ""}`
+
+    setExperiments(newExperiments)
+
+    const newExperimentsFiles = [...experimentsFiles]
+
+    newExperimentsFiles[n] = files;
+
+    setExperimentsFiles(newExperimentsFiles)
   }
 
   return (
@@ -102,13 +128,10 @@ const ExperimentsTable = ({ experiments, setExperiments }) => {
             Array(experiments.length).fill().map((_, n) => (
               <TableRow key={n}>
                 <TableCell>
-                  <TextField
-                    type='text'
-                    value={experiments[n]["Files"]}
-                    onChange={(ev) => editExperiments(ev.target.value, n, "Files")}
-                    placeholder={""}
-                    multiline
-                    fullWidth
+                  <input
+                  type="file"
+                  onChange={(ev) => editExperimentsFiles(ev.target, ev.target.files, n, "Files")}
+                  multiple
                   />
                 </TableCell>
 
