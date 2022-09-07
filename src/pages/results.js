@@ -86,7 +86,6 @@ async function ObtainBlobArray(event){
     }}
   }
   await zipReader.close()
-  console.log(configFile)
   return [{
     qcReports: FastQCReports,
     KronaPlots: KronaPlotsResults,

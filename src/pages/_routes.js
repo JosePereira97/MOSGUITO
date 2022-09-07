@@ -22,6 +22,7 @@ import GeneralReports from "./generalReports";
 import ProteinReports from "./proteinReports";
 import Upload_inputs from "./Upload_inputs";
 import My_inputs from "./My_inputs";
+import ServerAnalyses from "./start_Server_Analyses";
 
 const Routes = ({ configData, onConfigChange, onConfigOverwrite, hasMt, toggleHasMt, hasMp, toggleHasMp,
                   outputsFiles, setOutputsFiles, experimentsFiles, setExperimentsFiles }) => {
@@ -80,6 +81,13 @@ const Routes = ({ configData, onConfigChange, onConfigOverwrite, hasMt, toggleHa
 
         <Route path="/MOSGUITO/my_inputs">
           <My_inputs/>
+        </Route>
+
+        <Route path="/MOSGUITO/start_server">
+          <ServerAnalyses
+            configData = {configData}
+            onConfigChange = {onConfigChange}
+          />
         </Route>
 
         <Route path="/MOSGUITO/members">

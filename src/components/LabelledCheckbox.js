@@ -1,7 +1,7 @@
 import {Checkbox} from '@material-ui/core'
 import React, {useState} from "react";
 
-const LabelledCheckbox = ({ label, checked, setChecked, helpMessage ="" }) => {
+const LabelledCheckbox = ({ label, checked, setChecked, helpMessage ="",isDisable }) => {
   const [isHovering, setIsHovering] = useState(false);
 
   const handleMouseOver = () => {
@@ -20,6 +20,7 @@ const LabelledCheckbox = ({ label, checked, setChecked, helpMessage ="" }) => {
       <Checkbox
         checked={checked}
         onChange={setChecked}
+        disabled={isDisable}
       />
     </div>
     {isHovering && <div className='help'><h6>{helpMessage}</h6></div>}

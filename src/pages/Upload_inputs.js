@@ -3,6 +3,7 @@ import {DashboardLayout} from '../components/Layout';
 import { Button, Toolbar, Typography } from "@material-ui/core";
 import Select from 'react-select'
 import axios from 'axios'
+import  { Redirect } from 'react-router-dom'
 
 const Header = () => {
     return (
@@ -22,24 +23,31 @@ const Main = () => {
     const [type, setType] = useState("")
     const different_types = [{value:'Contigs', label:'Contigs'},{value:'Entry_report', label:'Entry_report'}, {value:'fastq', label:'fastq'}, {value:'scaffolds', label:'scaffolds'},{value:'fgs', label:'fgs'}]
     const changeType = (e) => {
-        console.log(e)
         setType(e)
     }
+    const [fullSpace, setfullSpace] = useState(false)
     const [file, setFile] = useState([])
     const handleFile = (e) =>{
-        console.log(e)
         setFile(e)
-        console.log(file)
     }
     const sendFiles = () => {
         const formData = new FormData();
         formData.append('el_file', file[0])
         formData.append('type', type.value)
         formData.append('userId', userId)
-      axios.post('http://127.0.0.1:5002/Submit_input_file', formData) //TODO request tem de ser na API, n na base de dados diretamente
+      axios.post('http://127.0.0.1:5002/Submit_input_file', formData).then(res => {
+        const resposte = res.data
+        if (resposte == 'No space'){
+          alert('No space in your!')
+          setfullSpace(true)
+        }if(resposte == 'File already Exists'){
+          alert('File not submitted, File already exists')
+        }
+      })
       }
 
 
+    //if (fullSpace == false){
 
     return (
     <>
@@ -58,7 +66,10 @@ const Main = () => {
       </Button>
     </>
   )
-  }
+  //}else{
+    //<Redirect to='/MOSGUITO/my_inputs' /> //Nao estaa funcionar averiguar depois
+  //}
+}
 
 
 

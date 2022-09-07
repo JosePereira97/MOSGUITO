@@ -83,6 +83,11 @@ export const NavSidebar = () => {
                     itemId: "/MOSGUITO/my_inputs"
                   }
                 ]
+              },
+              {
+                title:'Analyses',
+                itemId: '/MOSGUITO/start_server',
+                elemBefore: () => <Icon name="power" />
               }
             ]}
           />
