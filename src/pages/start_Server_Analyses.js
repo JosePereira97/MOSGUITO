@@ -54,9 +54,9 @@ const Main = (configData, onConfigChange) => {
         />)
         })}
       </Accordion>
-      <Typography  colorPrimary='white' variant='h6'>Go to Configuration and write in the experiments file the Sample, type, condition, name</Typography>
+      <Typography  style={{color:"white"}} variant='h6'>Go to Configuration and write in the experiments file the Sample, type, condition, name</Typography>
       <Accordion title='Match Input Files with Experiments Table'>
-        
+
       </Accordion>
   </div>)
 }
