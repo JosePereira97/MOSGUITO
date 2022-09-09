@@ -111,9 +111,6 @@ const Main = () => {
     axios.post('http://127.0.0.1:5002/Get_my_inputs/Download_Files', formDataDownload).then(
       res => {
         const results = res.data
-        console.log(res)
-        console.log(typeof(res.request.response))
-        console.log(typeof(res.data))
         if (idToDownload.length == 1){
           var blob = new Blob([results])
           var objectURL = URL.createObjectURL(blob)

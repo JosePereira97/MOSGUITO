@@ -1,7 +1,7 @@
 {
   "version": "1.6.1",
   "output":"output",
-  "name":"My analyses EX.",
+  "name":"",
   "resourcesDirectory":"resources_directory",
   "threads":14,
   "experiments": [

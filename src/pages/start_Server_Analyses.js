@@ -5,6 +5,15 @@ import Select from 'react-select'
 import axios from 'axios'
 import Accordion from '../components/Accordion'
 import LabelledCheckbox from "../components/LabelledCheckbox"
+import getType from '../components/analysesTypes';
+import {
+  Accordion as MuiAccordion,
+  AccordionDetails,
+  AccordionSummary
+} from '@material-ui/core'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import Icon from "awesome-react-icons";
+import {TextField} from "@material-ui/core";
 
 const Header = () => {
   return (
@@ -19,9 +28,14 @@ const Header = () => {
   )
 }
 
-const Main = (configData, onConfigChange) => {
+const Main = ({configData, onConfigChange}) => {
+  const userId = 'Great_user@tester.com' //Nome do User_Test quando for implementado os users. Precisa de ser alterado
   const analyses = ['preprocess', 'join_reads', 'assembly', 'binning', 'fastq2fasta', 'annotation', 'recognizer', 'quantification_analysis', 'metaphlan', 'protein_report','entry_report','differential_expression', 'keggcharter']
-  const [analyses_delta, setAnalyses] = useState([])
+  const [analyses_delta, setAnalyses] = useState([])//eventualmete vai para app.js para n se perder quando o utilizador alterar de experiments ou config para a pagina inicial.
+  const [buttons, setButtons] = useState({})
+  const [current,setCurrent] = useState('')
+  const [currentRowType, setCurrentRowType] = useState([])//eventualmete vai para app.js para n se perder quando o utilizador alterar de experiments ou config para a pagina inicial.
+  const [max_val, setMax_val] = useState(2)
   let index = 0
   const handleCheck = value =>{
     const newList = [...analyses_delta]
@@ -33,8 +47,97 @@ const Main = (configData, onConfigChange) => {
     }
     setAnalyses(newList)
   }
-
-
+  const [inputFiles, setInputFiles] = useState([]);
+  const showRespectiveListInput = function(rowExp, list) {
+    const inputFilesButtons = [...inputFiles]
+    let rowExp_1 = rowExp.split(': ')
+    for(let m = 0; m<inputFiles.length;m++){
+      if(inputFiles[m][1] =! rowExp_1[rowExp_1.length - 1]){
+        const teste = inputFilesButtons.indexOf(inputFiles[m])
+        if(teste > -1){
+          inputFilesButtons.splice(teste,1)
+        }
+      }
+    }
+    const max_1 = ['fgs', 'tsv', 'readcounts', 'contigs', 'scaffolds', 'piled_piled_fasta']
+    if(max_1.includes(rowExp_1[rowExp_1.length - 1])){
+      setMax_val(1)
+    }
+    setInputFiles(inputFilesButtons)
+    setCurrentRowType(list)
+    setCurrent(rowExp)
+  }
+  const [isOpen, setIsOpen] = useState(false)
+  const SheckAccordion = () =>{
+    if(analyses_delta.length === 0){
+      alert('No analyses selected')
+      setIsOpen(false)
+      return
+    }
+    let smallIndex = 9999999
+    analyses_delta.forEach(parse =>{
+      if (analyses.includes(parse)){
+        if(analyses.indexOf(parse) < smallIndex){
+          smallIndex = analyses.indexOf(parse)
+        }
+      }
+    })
+    setIsOpen(!isOpen)
+    const type = getType(analyses[smallIndex])
+    console.log(type)
+    const formDataFilesNames = new FormData()
+    formDataFilesNames.append('Types', JSON.stringify(type))
+    formDataFilesNames.append('User_id', userId)
+    console.log(type)
+    axios.post('http://127.0.0.1:5002/Get_my_inputs/StartAnalyses', formDataFilesNames).then(res =>{  //buscar inputs type do do utilizador a partir do type falta alterar APIs.
+      const results = res.data
+      console.log(results)
+      setInputFiles(results['my_info'].map(value =>{
+        console.log([value.file_name, value.file_type])
+        return([value.file_name, value.file_type])
+      }))
+    })
+    let choosenButtons = {}
+    for(let i = 0; i < configData.experiments.length; i++){
+      for(let x = 0; x < type.length; x++){
+        choosenButtons[configData.experiments[i].Name + ' / type: ' + type[x]] = []
+      }
+    }
+    setButtons(choosenButtons)
+    setCurrentRowType([])
+    setCurrent('')
+    setMax_val(2)
+  }
+  const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+  const startAnalyses = () => {
+    const formData = new FormData();
+    let snake_case_values = {}
+    Object.keys(configData).map((key) => snake_case_values[camelToSnakeCase(key)] = configData[key])
+    snake_case_values = JSON.stringify(snake_case_values)
+    formData.append('config', snake_case_values);
+    formData.append('Workflow', analyses_delta)
+    formData.append('FilesUsed', buttons)
+  axios.post('http://localhost:5000/Submit_file', formData)
+  }
+  const moveUP = () => {
+    buttons[current].splice(buttons[current].indexOf(),1)
+    
+  }
+  const clearSelection = () =>{
+    buttons[current] = []
+  }
+  const moveDown = () =>{
+    buttons[current].push()
+  }
+  const Choose = () =>{
+    if(currentRowType.length < max_val){
+      return(currentRowType.map(file =>{
+      return(<option value={file[1]} title={file[0]}>{file[0]}</option>)}))
+    }else{
+      alert('Max number of files for that Row')
+      return <option></option>
+    }
+  }
   return(<div style={{margin:'0.5rem'}}>
       <Accordion  title='Choose yout Analyses'>
         {analyses.map(name =>{
@@ -55,9 +158,51 @@ const Main = (configData, onConfigChange) => {
         })}
       </Accordion>
       <Typography  style={{color:"white"}} variant='h6'>Go to Configuration and write in the experiments file the Sample, type, condition, name</Typography>
-      <Accordion title='Match Input Files with Experiments Table'>
-
+      <MuiAccordion onChange={SheckAccordion} expanded={isOpen}>
+        <AccordionSummary
+              expandIcon={<ExpandMoreIcon/>}
+          >
+            {'Match Input Files with Experiments Table'}
+        </AccordionSummary>
+        <div style={{backgroundImage:"linear-gradient(to bottom, #FAFAFA, #F2F2F2)",backgroundRepeat:"repeat-x",border: "1px solid #D4D4D4",borderRadius: "4px 4px 4px 4px",boxShadow: "0 1px 4px rgba(0, 0, 0, 0.067)",paddingLeft: "10px",paddinTop: "10px",width: "800px"}}>
+          <div style={{position:"relative",bottom:"8px"}}>
+            <div style={{fontSize:"11px",fontWeight:"bold",marginLeft:"4px", marginRight:"5px",marginTop:"3px",marginBottom:"3px",float:"right"}}>
+              Experiment Rows
+              <div style={{marginLeft:"5px"}}>
+                {Object.keys(buttons).map(function(rowExperiments, index){
+                  return(<Button style={{}} onClick={() =>showRespectiveListInput(rowExperiments, buttons[rowExperiments])} color='secondary' variant='contained'>{rowExperiments}</Button>)
+                })}
+              </div>
+            </div>
+          </div>
+          <select style={{withd:"415px"}} multiple size={10}>
+            {inputFiles.map(file =>{
+              return(<option value={file[1]} title={file[0]}>{file[0]}</option>)
+            })}
+          </select>
+          <span>
+            <a style={{position:"relative",left:"36px", top:"0px", cursor:"pointer"}} onClick={moveUP}>
+              <Icon name='arrow-up'>...</Icon>
+            </a>
+            <a style={{position:"relative",left:"36px", top:"0px", cursor:"pointer"}} onClick={clearSelection}>
+              <Icon name='minus'>...</Icon>
+            </a>
+            <a style={{position:"relative",left:"36px", top:"0px", cursor:"pointer"}} onClick={moveDown}>
+              <Icon name='arrow-down'>...</Icon>
+            </a>
+          </span>
+          <select multiple size={10} name='selection' id='selection'>
+              <Choose onChange={currentRowType}></Choose>
+          </select>
+        </div>
+      </MuiAccordion>
+      <Accordion title='Analyses Name'>
+          <TextField onChange={ev => onConfigChange('name', ev.target.value)} value={configData.name}>
+          </TextField>
       </Accordion>
+      <Button color='primary' variant='contained' onClick={startAnalyses}>
+        Go To Analyses
+      </Button>
   </div>)
 }
 
@@ -65,14 +210,14 @@ const Main = (configData, onConfigChange) => {
 
 
 
-const ServerAnalyses = (configData, onConfigChange) => {
+const ServerAnalyses = ({configData, onConfigChange}) => {
     return(
         <DashboardLayout>
       <div className='App'>
         <Header />
         <Main
-        configData
-        onConfigChange 
+        configData = {configData}
+        onConfigChange = {onConfigChange} 
         />
       </div>
     </DashboardLayout>

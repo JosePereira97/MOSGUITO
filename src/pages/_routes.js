@@ -85,8 +85,8 @@ const Routes = ({ configData, onConfigChange, onConfigOverwrite, hasMt, toggleHa
 
         <Route path="/MOSGUITO/start_server">
           <ServerAnalyses
-            configData = {configData}
-            onConfigChange = {onConfigChange}
+            configData ={configData}
+            onConfigChange ={onConfigChange}
           />
         </Route>
 
