@@ -110,6 +110,7 @@ const Main = () => {
     formDataDownload.append('User_id', userId)
     axios.post('http://127.0.0.1:5002/Get_my_inputs/Download_Files', formDataDownload).then(
       res => {
+        console.log(res)
         const results = res.data
         if (idToDownload.length == 1){
           var blob = new Blob([results])

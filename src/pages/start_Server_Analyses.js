@@ -36,6 +36,8 @@ const Main = ({configData, onConfigChange}) => {
   const [current,setCurrent] = useState('')
   const [currentRowType, setCurrentRowType] = useState([])//eventualmete vai para app.js para n se perder quando o utilizador alterar de experiments ou config para a pagina inicial.
   const [max_val, setMax_val] = useState(2)
+  const [inputState, setInputState] = useState(false)
+  const [SelectedFile, setSelectedFile] = useState(false)
   let index = 0
   const handleCheck = value =>{
     const newList = [...analyses_delta]
@@ -48,12 +50,13 @@ const Main = ({configData, onConfigChange}) => {
     setAnalyses(newList)
   }
   const [inputFiles, setInputFiles] = useState([]);
+  const [allInputs, setAllInputs] = useState([])
   const showRespectiveListInput = function(rowExp, list) {
-    const inputFilesButtons = [...inputFiles]
+    const inputFilesButtons = [...allInputs] //TODO all inputs tranforma a segunda string num valor boleano dont know why...
     let rowExp_1 = rowExp.split(': ')
-    for(let m = 0; m<inputFiles.length;m++){
-      if(inputFiles[m][1] =! rowExp_1[rowExp_1.length - 1]){
-        const teste = inputFilesButtons.indexOf(inputFiles[m])
+    for(let m = 0; m<allInputs.length;m++){
+      if(allInputs[m][1] =! rowExp_1[rowExp_1.length - 1]){
+        const teste = inputFilesButtons.indexOf(allInputs[m])
         if(teste > -1){
           inputFilesButtons.splice(teste,1)
         }
@@ -84,18 +87,15 @@ const Main = ({configData, onConfigChange}) => {
     })
     setIsOpen(!isOpen)
     const type = getType(analyses[smallIndex])
-    console.log(type)
     const formDataFilesNames = new FormData()
     formDataFilesNames.append('Types', JSON.stringify(type))
     formDataFilesNames.append('User_id', userId)
-    console.log(type)
     axios.post('http://127.0.0.1:5002/Get_my_inputs/StartAnalyses', formDataFilesNames).then(res =>{  //buscar inputs type do do utilizador a partir do type falta alterar APIs.
       const results = res.data
-      console.log(results)
-      setInputFiles(results['my_info'].map(value =>{
-        console.log([value.file_name, value.file_type])
+      const todayFiles = results['my_info'].map(value =>{
         return([value.file_name, value.file_type])
-      }))
+      })
+      setAllInputs(todayFiles)
     })
     let choosenButtons = {}
     for(let i = 0; i < configData.experiments.length; i++){
@@ -110,33 +110,67 @@ const Main = ({configData, onConfigChange}) => {
   }
   const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
   const startAnalyses = () => {
+    console.log(analyses_delta.includes('preprocess'))
+    if (analyses_delta.includes('preprocess')){
+      for(let x = 0; x < configData.experiments.length; x++){
+        let frase = ''
+        let count = 0
+        for(let m = 0; m< buttons[configData.experiments[x].Name + ' / type: fastq'].length; m++){
+          if(count == 0){
+            frase = buttons[configData.experiments[x].Name + ' / type: fastq'][m]
+            count +=1
+          }else{
+            frase = frase + ',' + buttons[configData.experiments[x].Name + ' / type: fastq'][m]
+          }
+        }
+        configData.experiments[x].Files = frase
+      }
+    }
+    
     const formData = new FormData();
     let snake_case_values = {}
     Object.keys(configData).map((key) => snake_case_values[camelToSnakeCase(key)] = configData[key])
     snake_case_values = JSON.stringify(snake_case_values)
+    let greatFiles = {}
+    Object.keys(buttons).map((key) => greatFiles[camelToSnakeCase(key)] = buttons[key])
+    greatFiles = JSON.stringify(greatFiles)
     formData.append('config', snake_case_values);
     formData.append('Workflow', analyses_delta)
-    formData.append('FilesUsed', buttons)
-  axios.post('http://localhost:5000/Submit_file', formData)
+    formData.append('Files', greatFiles)
+    formData.append('User_id', userId)
+  axios.post('http://localhost:5002/Submit_for_analyses', formData)
   }
   const moveUP = () => {
-    buttons[current].splice(buttons[current].indexOf(),1)
-    
-  }
-  const clearSelection = () =>{
-    buttons[current] = []
-  }
-  const moveDown = () =>{
-    buttons[current].push()
-  }
-  const Choose = () =>{
-    if(currentRowType.length < max_val){
-      return(currentRowType.map(file =>{
-      return(<option value={file[1]} title={file[0]}>{file[0]}</option>)}))
+    if(buttons[current] === undefined){
+      alert('No Row of experiments selected')
     }else{
+    buttons[current].splice(buttons[current].indexOf(inputState),1)
+    setInputState(false)
+    
+  }}
+  const clearSelection = () =>{
+    if(buttons[current] === undefined){
+      alert('No Row of experiments selected')
+    }else{
+    buttons[current] = []
+    setInputState(false)
+    showRespectiveListInput(current, buttons[current])
+    
+  }}
+  const moveDown = () =>{
+    if(currentRowType.length > max_val){
       alert('Max number of files for that Row')
-      return <option></option>
-    }
+    }if(buttons[current] === undefined){
+      alert('No Row of experiments selected')
+    }else{
+    buttons[current].push(SelectedFile)
+    setSelectedFile(false)}
+  }
+  const selectInput = e =>{
+    setInputState(e.target.value)
+  }
+  const selectedFile = e =>{
+    setSelectedFile(e.target.value)
   }
   return(<div style={{margin:'0.5rem'}}>
       <Accordion  title='Choose yout Analyses'>
@@ -175,9 +209,13 @@ const Main = ({configData, onConfigChange}) => {
               </div>
             </div>
           </div>
-          <select style={{withd:"415px"}} multiple size={10}>
+          <select style={{withd:"415px"}} multiple size={10} onChange={selectedFile}>
             {inputFiles.map(file =>{
-              return(<option value={file[1]} title={file[0]}>{file[0]}</option>)
+              if(buttons[current] !== undefined){
+              if(buttons[current].includes(file[0])){
+                return
+              }}
+              return(<option value={file[0]} title={file[0]}>{file[0]}</option>)
             })}
           </select>
           <span>
@@ -191,8 +229,12 @@ const Main = ({configData, onConfigChange}) => {
               <Icon name='arrow-down'>...</Icon>
             </a>
           </span>
-          <select multiple size={10} name='selection' id='selection'>
-              <Choose onChange={currentRowType}></Choose>
+          <select multiple size={10} name='selection' id='selection' onChange={selectInput} style={{withd:"415px"}}>
+              {currentRowType.map(file =>{
+                if(currentRowType.length > max_val){
+                  alert('Max number of files for that Row')
+                }
+      return(<option value={file} title={file}>{file}</option>)})}
           </select>
         </div>
       </MuiAccordion>
