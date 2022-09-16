@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 
 import Routes from "./_routes";
 import * as defaultValues from '../utils/defaultValues.json';
+import Loggin from "./Loggin";
 
 export const App = () => {
   const [configData, setConfig] = useState(defaultValues.default)
@@ -11,6 +12,10 @@ export const App = () => {
   const [hasMp, setHasMp] = useState(false)
   const toggleHasMp = () => setHasMp(!hasMp)
   const [experimentsFiles, setExperimentsFiles] = useState([[]])
+  const [loadingApp, setLoadingApp] = useState(true);
+  const [loggedIn, setLoggedIn] = useState(false);
+  
+  
 
   const onConfigChange = (field, value) => {
     const newValue = { ...configData, [field]: value }
@@ -21,7 +26,7 @@ export const App = () => {
     const newValue = newConfigData
     setConfig(newValue)
   }
-
+  if(loggedIn === true){
   return <Routes
     configData={configData}
     onConfigChange={onConfigChange}
@@ -34,6 +39,8 @@ export const App = () => {
     toggleHasMp={toggleHasMp}
     experimentsFiles={experimentsFiles}
     setExperimentsFiles={setExperimentsFiles}
-  />;
+  />;}else{
+    return(<Loggin loadingApp ={loadingApp} setLoadingApp = {setLoadingApp} loggedIn = {loggedIn} setLoggedIn = {setLoggedIn} ></Loggin>)
+  }
 };
 

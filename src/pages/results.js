@@ -119,7 +119,7 @@ const Main = ({ outputsFiles, setOutputsFiles, onConfigOverwrite }) => {
       (key) => delete Object.assign(Output[1], {[snakeToCamelCase(key)]: Output[1][key]}))
     onConfigOverwrite(Output[1])
   }
-  return (
+  return ( //fazer alteraçao para lista  a parte do butao fica para dwonload e outro para ver resultados
     <>
       <Button
         variant='contained'
@@ -131,7 +131,7 @@ const Main = ({ outputsFiles, setOutputsFiles, onConfigOverwrite }) => {
         <input
           type="file"
           accept='application/zip'
-          onChange={handleZipChange}
+          onChange={handleZipChange} //esta funçao essencial dos resultados. A que precisa de ser alterada.
           hidden
         />
       </Button>

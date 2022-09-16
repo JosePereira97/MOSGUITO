@@ -62,7 +62,7 @@ const Main = ({configData, onConfigChange}) => {
         }
       }
     }
-    const max_1 = ['fgs', 'tsv', 'readcounts', 'contigs', 'scaffolds', 'piled_piled_fasta']
+    const max_1 = ['fgs', 'tsv', 'readcounts', 'contigs', 'scaffolds', 'piled_piled_fasta'] //fazer alteraçao tambem vai depender de inputs e de reverse forward etc...
     if(max_1.includes(rowExp_1[rowExp_1.length - 1])){
       setMax_val(1)
     }
@@ -96,11 +96,12 @@ const Main = ({configData, onConfigChange}) => {
         return([value.file_name, value.file_type])
       })
       setAllInputs(todayFiles)
+      setInputFiles(todayFiles)
     })
     let choosenButtons = {}
     for(let i = 0; i < configData.experiments.length; i++){
       for(let x = 0; x < type.length; x++){
-        choosenButtons[configData.experiments[i].Name + ' / type: ' + type[x]] = []
+        choosenButtons[configData.experiments[i].Name + ' / type: ' + type[x]] = [] //alteraçao para inserir os nomes nos botoes para forward reverse e tambem para os respetivos sample. Necessita eventualmente de outro js
       }
     }
     setButtons(choosenButtons)
@@ -110,7 +111,6 @@ const Main = ({configData, onConfigChange}) => {
   }
   const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
   const startAnalyses = () => {
-    console.log(analyses_delta.includes('preprocess'))
     if (analyses_delta.includes('preprocess')){
       for(let x = 0; x < configData.experiments.length; x++){
         let frase = ''
@@ -126,7 +126,15 @@ const Main = ({configData, onConfigChange}) => {
         configData.experiments[x].Files = frase
       }
     }
-    
+    let workflow = []
+    for(let a = 0; a< analyses.length; a++ ){
+      if(analyses_delta.indexOf(analyses[a]) > -1){
+        workflow.push(analyses[a])
+      }
+    }
+    if(workflow == analyses){
+      workflow = ['all']
+    }
     const formData = new FormData();
     let snake_case_values = {}
     Object.keys(configData).map((key) => snake_case_values[camelToSnakeCase(key)] = configData[key])
@@ -135,7 +143,7 @@ const Main = ({configData, onConfigChange}) => {
     Object.keys(buttons).map((key) => greatFiles[camelToSnakeCase(key)] = buttons[key])
     greatFiles = JSON.stringify(greatFiles)
     formData.append('config', snake_case_values);
-    formData.append('Workflow', analyses_delta)
+    formData.append('Workflow', workflow)
     formData.append('Files', greatFiles)
     formData.append('User_id', userId)
   axios.post('http://localhost:5002/Submit_for_analyses', formData)
