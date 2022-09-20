@@ -185,9 +185,17 @@ const Main = ({ configData, onConfigChange }) => {
     formData.append("config", snake_case_values);
     formData.append("Workflow", workflow);
     formData.append("Files", greatFiles);
-    axios.post("http://localhost:5002/Submit_for_analyses", formData, {
-      withCredentials: true,
-    });
+    axios
+      .post("http://127.0.0.1:5002/Submit_for_analyses", formData, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data === "Analises Started") {
+          alert("It started!");
+        } else {
+          alert("some error ocurred");
+        }
+      });
   };
   const moveUP = () => {
     if (buttons[current] === undefined) {
@@ -389,7 +397,11 @@ const Main = ({ configData, onConfigChange }) => {
           value={configData.name}
         ></TextField>
       </Accordion>
-      <Button color="primary" variant="contained" onClick={startAnalyses}>
+      <Button
+        color="primary"
+        variant="contained"
+        onClick={() => startAnalyses()}
+      >
         Go To Analyses
       </Button>
     </div>

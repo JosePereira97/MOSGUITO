@@ -10,7 +10,6 @@ const Main = ({ loadingApp, setLoadingApp, setLoggedIn, loggedIn }) => {
   let [authMode, setAuthMode] = useState("signin");
 
   const tryLoggin = () => {
-    alert("aqui entra");
     axios
       .post(
         "http://127.0.0.1:5000/Login/Check_Credentials",
@@ -23,8 +22,6 @@ const Main = ({ loadingApp, setLoadingApp, setLoggedIn, loggedIn }) => {
         }
       )
       .then((res) => {
-        console.log(res);
-        console.log(res.data);
         alert(res.data);
         if (res.data === "Wrong Password") {
           alert("Wrong Password");
@@ -33,7 +30,6 @@ const Main = ({ loadingApp, setLoadingApp, setLoggedIn, loggedIn }) => {
           alert("Wrong email");
         } else {
           setLoggedIn(true);
-          console.log("entra");
           history.push("/MOSGUITO/home");
         }
       });
@@ -61,19 +57,6 @@ const Main = ({ loadingApp, setLoadingApp, setLoggedIn, loggedIn }) => {
         }
       });
   };
-  /*
-   ** Check for a user token when the app initializes.
-   **
-   ** Use the loadingApp variable to delay the routes from
-   ** taking effect until loggedIn has been set (even logged in
-   ** users would be immediately redirected to login page
-   ** otherwise).
-   */
-
-  /*useEffect(() => {
-        setLoggedIn(!!getUser());
-        setLoadingApp(false);
-    }, []);*/
 
   const changeAuthMode = () => {
     setAuthMode(authMode === "signin" ? "signup" : "signin");

@@ -15,7 +15,6 @@ const Header = () => {
 };
 
 const Main = () => {
-  const userId = "Great_user@tester.com"; //Nome do User_Test quando for implementado os users. Precisa de ser alterado
   const [type, setType] = useState("");
   const different_types = [
     { value: "Contigs", label: "Contigs" },
@@ -48,6 +47,9 @@ const Main = () => {
         }
         if (resposte == "File already Exists") {
           alert("File not submitted, File already exists");
+        } else {
+          alert("File saved!");
+          window.location.reload(false);
         }
       });
   };
