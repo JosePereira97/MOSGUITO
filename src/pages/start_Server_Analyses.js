@@ -80,7 +80,7 @@ const Main = ({ configData, onConfigChange }) => {
       "contigs",
       "scaffolds",
       "piled_piled_fasta",
-    ]; //fazer alteraçao tambem vai depender de inputs e de reverse forward etc...
+    ];
     if (max_1.includes(rowExp_1[rowExp_1.length - 1])) {
       setMax_val(1);
     }
@@ -95,7 +95,7 @@ const Main = ({ configData, onConfigChange }) => {
       setIsOpen(false);
       return;
     }
-    let smallIndex = 9999999;
+    let smallIndex = 9999999; //alterado devido a forma como e feita aescolha das analises
     analyses_delta.forEach((parse) => {
       if (analyses.includes(parse)) {
         if (analyses.indexOf(parse) < smallIndex) {
@@ -127,8 +127,9 @@ const Main = ({ configData, onConfigChange }) => {
     let choosenButtons = {};
     for (let i = 0; i < configData.experiments.length; i++) {
       for (let x = 0; x < type.length; x++) {
+        //adicionar um iff pois se as analises utilizarem sample files, n vai ser por cada linha do experiments mas por cada sample,se nao adidiocnar file a mesma lista que contem o nome da mesma sample
         choosenButtons[configData.experiments[i].Name + " / type: " + type[x]] =
-          []; //alteraçao para inserir os nomes nos botoes para forward reverse e tambem para os respetivos sample. Necessita eventualmente de outro js
+          [];
       }
     }
     setButtons(choosenButtons);
@@ -139,29 +140,27 @@ const Main = ({ configData, onConfigChange }) => {
   const camelToSnakeCase = (str) =>
     str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
   const startAnalyses = () => {
-    if (analyses_delta.includes("preprocess")) {
-      for (let x = 0; x < configData.experiments.length; x++) {
-        let frase = "";
-        let count = 0;
-        for (
-          let m = 0;
-          m < buttons[configData.experiments[x].Name + " / type: fastq"].length;
-          m++
-        ) {
-          if (count == 0) {
-            frase =
-              buttons[configData.experiments[x].Name + " / type: fastq"][m];
-            count += 1;
-          } else {
-            frase =
-              frase +
-              "," +
-              buttons[configData.experiments[x].Name + " / type: fastq"][m];
-          }
+    for (let x = 0; x < configData.experiments.length; x++) {
+      let frase = "";
+      let count = 0;
+      for (
+        let m = 0;
+        m < buttons[configData.experiments[x].Name + " / type: fastq"].length;
+        m++
+      ) {
+        if (count == 0) {
+          frase = buttons[configData.experiments[x].Name + " / type: fastq"][m];
+          count += 1;
+        } else {
+          frase =
+            frase +
+            "," +
+            buttons[configData.experiments[x].Name + " / type: fastq"][m];
         }
-        configData.experiments[x].Files = frase;
       }
+      configData.experiments[x].Files = frase;
     }
+
     let workflow = [];
     for (let a = 0; a < analyses.length; a++) {
       if (analyses_delta.indexOf(analyses[a]) > -1) {
@@ -263,7 +262,7 @@ const Main = ({ configData, onConfigChange }) => {
         })}
       </Accordion>
       <Typography style={{ color: "white" }} variant="h6">
-        Go to Configuration and write in the experiments file the Sample, type,
+        Go to Configuration and write in the experiments the Sample, type,
         condition, name
       </Typography>
       <MuiAccordion onChange={SheckAccordion} expanded={isOpen}>

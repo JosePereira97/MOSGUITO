@@ -3,10 +3,9 @@ import { Navigation } from "react-minimal-side-navigation";
 import { useHistory, useLocation } from "react-router-dom";
 import Icon from "awesome-react-icons";
 import React from "react";
-import { FaChartPie } from 'react-icons/fa';
-import { ResultsDisposition } from '../pages/results'
+import { FaChartPie } from "react-icons/fa";
+import { ResultsDisposition } from "../pages/results";
 import "react-minimal-side-navigation/lib/ReactMinimalSideNavigation.css";
-
 
 export const NavSidebar = () => {
   const history = useHistory();
@@ -25,7 +24,7 @@ export const NavSidebar = () => {
               {
                 title: "Home",
                 itemId: "/MOSGUITO/home",
-                elemBefore: () => <Icon name="coffee" />
+                elemBefore: () => <Icon name="coffee" />,
               },
               {
                 title: "About",
@@ -34,13 +33,13 @@ export const NavSidebar = () => {
                 subNav: [
                   {
                     title: "The MOSCA project",
-                    itemId: "/MOSGUITO/project"
+                    itemId: "/MOSGUITO/project",
                   },
                   {
                     title: "Members",
-                    itemId: "/MOSGUITO/members"
-                  }
-                ]
+                    itemId: "/MOSGUITO/members",
+                  },
+                ],
               },
               {
                 title: "Configuration",
@@ -49,46 +48,46 @@ export const NavSidebar = () => {
                 subNav: [
                   {
                     title: "General configuration",
-                    itemId: "/MOSGUITO/general-configuration"
+                    itemId: "/MOSGUITO/general-configuration",
                   },
                   {
                     title: "UniProt columns",
-                    itemId: "/MOSGUITO/uniprot-columns"
+                    itemId: "/MOSGUITO/uniprot-columns",
                   },
                   {
                     title: "UniProt databases",
-                    itemId: "/MOSGUITO/uniprot-databases"
+                    itemId: "/MOSGUITO/uniprot-databases",
                   },
                   {
                     title: "KEGG metabolic maps",
-                    itemId: "/MOSGUITO/keggmaps"
+                    itemId: "/MOSGUITO/keggmaps",
                   },
                   {
                     title: "Experiments",
-                    itemId: "/MOSGUITO/experiments"
-                  }
-                ]
+                    itemId: "/MOSGUITO/experiments",
+                  },
+                ],
               },
               {
-                title:"Inputs",
+                title: "Inputs",
                 itemId: "/MOSGUITO/inputs",
-                elemBefore: () => <Icon name= 'cloud-snow' />,
+                elemBefore: () => <Icon name="cloud-snow" />,
                 subNav: [
                   {
                     title: "Upload Inputs",
-                    itemId: "/MOSGUITO/upload_inputs"
+                    itemId: "/MOSGUITO/upload_inputs",
                   },
                   {
                     title: "My Inputs",
-                    itemId: "/MOSGUITO/my_inputs"
-                  }
-                ]
+                    itemId: "/MOSGUITO/my_inputs",
+                  },
+                ],
               },
               {
-                title:'Analyses',
-                itemId: '/MOSGUITO/start_server',
-                elemBefore: () => <Icon name="power" />
-              }
+                title: "Analyses",
+                itemId: "/MOSGUITO/start_server",
+                elemBefore: () => <Icon name="power" />,
+              },
             ]}
           />
 
@@ -99,8 +98,8 @@ export const NavSidebar = () => {
                 {
                   title: "Results",
                   itemId: "/MOSGUITO/results",
-                  elemBefore: () => <FaChartPie />
-                }
+                  elemBefore: () => <FaChartPie />,
+                },
               ]}
               onSelect={({ itemId }) => {
                 history.push(itemId);
@@ -111,6 +110,7 @@ export const NavSidebar = () => {
       </>
     );
   } else {
+    //Results accordion
 
     return (
       <>
@@ -125,7 +125,7 @@ export const NavSidebar = () => {
               {
                 title: "Home",
                 itemId: "/MOSGUITO/home",
-                elemBefore: () => <Icon name="coffee" />
+                elemBefore: () => <Icon name="coffee" />,
               },
               {
                 title: "About",
@@ -134,13 +134,13 @@ export const NavSidebar = () => {
                 subNav: [
                   {
                     title: "Project",
-                    itemId: "/MOSGUITO/project"
+                    itemId: "/MOSGUITO/project",
                   },
                   {
                     title: "Members",
-                    itemId: "/MOSGUITO/members"
-                  }
-                ]
+                    itemId: "/MOSGUITO/members",
+                  },
+                ],
               },
               {
                 title: "Configuration",
@@ -149,30 +149,30 @@ export const NavSidebar = () => {
                 subNav: [
                   {
                     title: "General configuration",
-                    itemId: "/MOSGUITO/general-configuration"
+                    itemId: "/MOSGUITO/general-configuration",
                   },
                   {
                     title: "Experiments",
-                    itemId: "/MOSGUITO/experiments"
+                    itemId: "/MOSGUITO/experiments",
                   },
                   {
                     title: "UniProt columns",
-                    itemId: "/MOSGUITO/uniprot-columns"
+                    itemId: "/MOSGUITO/uniprot-columns",
                   },
                   {
                     title: "UniProt databases",
-                    itemId: "/MOSGUITO/uniprot-databases"
+                    itemId: "/MOSGUITO/uniprot-databases",
                   },
                   {
                     title: "KEGG metabolic maps",
-                    itemId: "/MOSGUITO/keggmaps"
+                    itemId: "/MOSGUITO/keggmaps",
                   },
                   {
                     title: "Proteomics configuration",
-                    itemId: "/MOSGUITO/proteomics-configuration"
-                  }
-                ]
-              }
+                    itemId: "/MOSGUITO/proteomics-configuration",
+                  },
+                ],
+              },
             ]}
           />
 
@@ -187,42 +187,42 @@ export const NavSidebar = () => {
                   subNav: [
                     {
                       title: "Load results",
-                      itemId: "/MOSGUITO/load-results"
+                      itemId: "/MOSGUITO/load-results",
                     },
                     {
                       title: "FastQC reports",
-                      itemId: "/MOSGUITO/fastqc-reports"
+                      itemId: "/MOSGUITO/fastqc-reports",
                     },
                     {
                       title: "Assembly QC",
-                      itemId: "/MOSGUITO/assembly-qc"
+                      itemId: "/MOSGUITO/assembly-qc",
                     },
                     {
-                      title: 'Annotation Results',
-                      itemId: '/MOSGUITO/annotation-results'
+                      title: "Annotation Results",
+                      itemId: "/MOSGUITO/annotation-results",
                     },
                     {
-                      title: 'Differential Analysis',
-                      itemId: '/MOSGUITO/differential-analysis'
+                      title: "Differential Analysis",
+                      itemId: "/MOSGUITO/differential-analysis",
                     },
                     {
-                      title: 'KEGGmaps',
-                      itemId: '/MOSGUITO/keggmaps-results'
+                      title: "KEGGmaps",
+                      itemId: "/MOSGUITO/keggmaps-results",
                     },
                     {
-                      title: 'EntryReports',
-                      itemId: '/MOSGUITO/entry-reports'
+                      title: "EntryReports",
+                      itemId: "/MOSGUITO/entry-reports",
                     },
                     {
-                      title: 'GeneralReports',
-                      itemId: '/MOSGUITO/general-reports'
+                      title: "GeneralReports",
+                      itemId: "/MOSGUITO/general-reports",
                     },
                     {
-                      title: 'ProteinReports',
-                      itemId: '/MOSGUITO/protein-reports'
-                    }
-                  ]
-                }
+                      title: "ProteinReports",
+                      itemId: "/MOSGUITO/protein-reports",
+                    },
+                  ],
+                },
               ]}
               onSelect={({ itemId }) => {
                 history.push(itemId);
@@ -232,5 +232,5 @@ export const NavSidebar = () => {
         </div>
       </>
     );
-  };
-}
+  }
+};
