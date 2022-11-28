@@ -234,3 +234,61 @@ export const NavSidebar = () => {
     );
   }
 };
+
+export const ResultsSideBar = () => {
+  const history = useHistory();
+  const location = useLocation();
+  return (
+    <>
+      <div>
+        <Navigation
+          activeItemId={location.pathname}
+          items={[
+            {
+              title: "Results",
+              itemId: "/MOSGUITO/results",
+              elemBefore: () => <FaChartPie />,
+              subNav: [
+                {
+                  title: "FastQC reports",
+                  itemId: "/MOSGUITO/fastqc-reports",
+                },
+                {
+                  title: "Assembly QC",
+                  itemId: "/MOSGUITO/assembly-qc",
+                },
+                {
+                  title: "Annotation Results",
+                  itemId: "/MOSGUITO/annotation-results",
+                },
+                {
+                  title: "Differential Analysis",
+                  itemId: "/MOSGUITO/differential-analysis",
+                },
+                {
+                  title: "KEGGmaps",
+                  itemId: "/MOSGUITO/keggmaps-results",
+                },
+                {
+                  title: "EntryReports",
+                  itemId: "/MOSGUITO/entry-reports",
+                },
+                {
+                  title: "GeneralReports",
+                  itemId: "/MOSGUITO/general-reports",
+                },
+                {
+                  title: "ProteinReports",
+                  itemId: "/MOSGUITO/protein-reports",
+                },
+              ],
+            },
+          ]}
+          onSelect={({ itemId }) => {
+            history.push(itemId);
+          }}
+        />
+      </div>
+    </>
+  );
+};

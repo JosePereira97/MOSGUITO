@@ -41,18 +41,23 @@ const Main = () => {
   const columns = [
     {
       name: "File Name",
-      selector: (row) => row.file_name,
-      sortable: true,
-    },
-    {
-      name: "File Type",
-      selector: (row) => row.file_type,
+      selector: (row) => row.Analyses_name,
       sortable: true,
     },
     {
       name: "Data",
       selector: (row) => row.data,
       sortable: true,
+    },
+    {
+      name: "Visualize",
+      selector: (row) => row.link,
+      sortable: false,
+    },
+    {
+      name: "Download",
+      selector: (row) => row.download,
+      sortable: false,
     },
   ];
   const [filterText, setFilterText] = useState("");
