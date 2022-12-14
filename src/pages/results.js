@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { DashboardLayout } from "../components/Layout";
 import { Button, Toolbar, Typography } from "@material-ui/core";
 import * as zip from "@zip.js/zip.js";
 import $ from "jquery";
 import DataTable from "react-data-table-component";
+import axios from "axios";
+import FilterComponent from "./filterDataTest";
 zip.configure({ useWebWorkers: false });
 
 const treatName = (name) => {
@@ -14,9 +16,9 @@ const treatName = (name) => {
 };
 
 async function ObtainBlobArray(event) {
-  const file = event.target.files[0];
-  const blobReader = new zip.BlobReader(file);
+  const blobReader = new zip.BlobReader(event);
   const zipReader = new zip.ZipReader(blobReader);
+  console.log(zipReader);
 
   const entries = await zipReader.getEntries();
 
@@ -29,6 +31,7 @@ async function ObtainBlobArray(event) {
   let configFile = [];
   let general = [];
   let protein = [];
+  console.log(entries);
 
   for (let i = 0; i < entries.length; i++) {
     if (entries[i].directory === false && entries[i].compressedSize !== 0) {
@@ -140,7 +143,7 @@ const Main = ({ outputsFiles, setOutputsFiles, onConfigOverwrite }) => {
     });
   };
 
-  const handleZipChange = async (event) => {
+  const handleZipChange = (event) => {
     const formData = new FormData();
     formData.append("ID", JSON.stringify(event));
 
@@ -154,7 +157,17 @@ const Main = ({ outputsFiles, setOutputsFiles, onConfigOverwrite }) => {
       )
       .then((res) => {
         const results = res.data;
-        let Output = ObtainBlobArray(results);
+        console.log(results);
+        var binaryString = window.atob(results);
+        var binaryLen = binaryString.length;
+        var bytes = new Uint8Array(binaryLen);
+        for (var i = 0; i < binaryLen; i++) {
+          var ascii = binaryString.charCodeAt(i);
+          bytes[i] = ascii;
+        }
+        console.log(bytes);
+        let Output = ObtainBlobArray(bytes);
+        console.log(Output);
         setOutputsFiles(Output[0]);
         Object.keys(Output[1]).map(
           (key) =>
